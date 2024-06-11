@@ -91,7 +91,7 @@ int main(void) {
     InitWindow(screenWidth, screenHeight, "Tetris Clone");
     int level = 1;
     level = 2 * level;
-    SetTargetFPS(5);
+    SetTargetFPS(20);
 
     srand(time(0));
     int x = rand() % 17;
@@ -110,14 +110,6 @@ int main(void) {
         BeginDrawing();
         ClearBackground(BLACK);
 
-        // Draw grid
-        for (int i = 0; i < 20; i++) {
-            DrawLine(i * 30, 0, i * 30, screenHeight, GREEN);
-        }
-        for (int i = 0; i < 30; i++) {
-            DrawLine(0, i * 30, screenWidth, i * 30, GREEN);
-        }
-
         // Draw current Tetrimino
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
@@ -126,7 +118,7 @@ int main(void) {
                 }
             }
         }
-        y += 30;
+        y += level;
 
         
 
