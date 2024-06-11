@@ -25,8 +25,12 @@ void rotate(int* matrix) {
 }
 
 int main(void) {
+
+
     const int screenWidth = 600;
     const int screenHeight = 900;
+
+    int space[30][20]={0};
 
     int O[4][4] = {
         {0, 0, 0, 0},
@@ -89,9 +93,9 @@ int main(void) {
 
 
     InitWindow(screenWidth, screenHeight, "Tetris Clone");
-    int level = 1;
-    level = 2 * level;
+    
     SetTargetFPS(20);
+    int level=1;
 
     srand(time(0));
     int x = rand() % 17;
@@ -102,25 +106,48 @@ int main(void) {
         static int y = -120;
 
         static int k = 1;
-
-        // Check if the Tetrimino has reached the bottom of the screen
         
-
         // Draw everything
         BeginDrawing();
         ClearBackground(BLACK);
 
+        for (int i = 29; i >= 0; i--) {
+            int flag=0;
+            for (int j = 0; j<20; j++) {
+                if (space[i][j]==1) {
+                    DrawRectangle(j * 30 , i * 30, 30, 30, GREEN);
+                    flag=1;
+                }
+            }
+            if(flag==0) break;
+        }
+
+
+        // Draw grid
+        for (int i = 0; i < 20; i++) {
+            DrawLine(i * 30, 0, i * 30, screenHeight, GREEN);
+        }
+        for (int i = 0; i < 30; i++) {
+            DrawLine(0, i * 30, screenWidth, i * 30, GREEN);
+        }
+
+       
+        int max;
         // Draw current Tetrimino
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 if (*(matrix[k] + i * 4 + j)) {
+                    max=i;
                     DrawRectangle(x * 30 + j * 30, y + i * 30, 30, 30, GREEN);
                 }
             }
         }
+
+
+
         y += level;
 
-        
+
 
         // Check for rotation input
         if (IsKeyPressed(KEY_SPACE) || IsKeyPressedRepeat(KEY_SPACE)) {
@@ -136,13 +163,21 @@ int main(void) {
             x+=1;
         }
 
-        if (y >= 900) {
+        if (y + max * 30 + 30 >= 900) {
+            for (int i = 0; i < 4; i++) {
+                for (int j = 0; j < 4; j++) {
+                    if (*(matrix[k] + i * 4 + j)) {
+                        space[(y / 30) + i][x + j] = 1;
+                    }
+                }
+            }
             y = -120;
-            k++;
-            k =k % 7;
+            k = (k + 1) % 7;
             srand(time(0));
             x = rand() % 17;
         }
+
+
         EndDrawing();
     }
     free(matrix);
