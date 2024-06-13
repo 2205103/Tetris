@@ -214,6 +214,12 @@ int main(void) {
             for (int i = 0; i < 4; i++) {
                 for (int j = 0; j < 4; j++) {
                     if (*(matrix[k] + i * 4 + j)) {
+                        if(((y / 30) + i)<=0)
+                        {
+                            ClearBackground(BLACK);
+                            DrawRectangle(0,0,600,900,YELLOW);
+                            CloseWindow();
+                        }
                         space[(y / 30) + i][x + j] = 1;
                     }
                 }
