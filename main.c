@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <time.h>
 
+int space[30][20]={0};
+
 void rotate(int* matrix) {
     // Transpose the matrix
     for (int i = 0; i < 4; i++) {
@@ -24,13 +26,26 @@ void rotate(int* matrix) {
     }
 }
 
+void remove_grid()
+{
+    for(int i=28;i>=0;i--)
+    {
+        int count=0;
+        for(int j=0;j<20;j++)
+        {
+            if(space[i][j]) count=1;
+            space[i+1][j]=space[i][j];
+        }
+        if(count==0) return;
+    }
+}
+
 int main(void) {
 
 
     const int screenWidth = 600;
     const int screenHeight = 900;
 
-    int space[30][20]={0};
 
     int O[4][4] = {
         {0, 0, 0, 0},
@@ -121,10 +136,14 @@ int main(void) {
                 if (space[i][j]==1) {
                     space_fill=i;
                     DrawRectangle(j * 30 , i * 30, 30, 30, GREEN);
-                    flag=1;
+                    flag++;
                 }
             }
             if(flag==0) break;
+            else if(flag==20)
+            {
+                remove_grid();
+            }
         }
 
 
