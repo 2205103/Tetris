@@ -95,10 +95,12 @@ int main(void) {
     InitWindow(screenWidth, screenHeight, "Tetris Clone");
     
     SetTargetFPS(20);
-    int level=1;
+    int level=10;
 
     srand(time(0));
     int x = rand() % 17;
+    int space_fill=100;
+    bool collide=false;
     
 
     while (!WindowShouldClose()) {
@@ -111,10 +113,13 @@ int main(void) {
         BeginDrawing();
         ClearBackground(BLACK);
 
+
+
         for (int i = 29; i >= 0; i--) {
             int flag=0;
             for (int j = 0; j<20; j++) {
                 if (space[i][j]==1) {
+                    space_fill=i;
                     DrawRectangle(j * 30 , i * 30, 30, 30, GREEN);
                     flag=1;
                 }
@@ -125,10 +130,10 @@ int main(void) {
 
         // Draw grid
         for (int i = 0; i < 20; i++) {
-            DrawLine(i * 30, 0, i * 30, screenHeight, GREEN);
+            DrawLine(i * 30, 0, i * 30, screenHeight, YELLOW);
         }
         for (int i = 0; i < 30; i++) {
-            DrawLine(0, i * 30, screenWidth, i * 30, GREEN);
+            DrawLine(0, i * 30, screenWidth, i * 30, YELLOW);
         }
 
        
@@ -154,16 +159,39 @@ int main(void) {
             rotate(*(matrix+k));
         }
 
-        if(IsKeyPressed(KEY_LEFT))
+        if(IsKeyPressed(KEY_LEFT)|| IsKeyPressedRepeat(KEY_SPACE))
         {
             x-=1;
         }
-        if(IsKeyPressed(KEY_RIGHT))
+        if(IsKeyPressed(KEY_RIGHT)|| IsKeyPressedRepeat(KEY_SPACE))
         {
             x+=1;
         }
 
-        if (y + max * 30 + 30 >= 900) {
+
+        if(((y + max * 30 + 30)/30)>=space_fill)
+        {
+            for(int j=0;j<4;j++)
+            {
+                int max_i=-1;
+                for(int i=3;i>=0;i--)
+                {
+                    if(*(matrix[k] + i * 4 + j))
+                    {
+                        max_i=i;
+                        break;
+                    }
+                }
+
+                if(max_i>=0 && space[((y + max_i * 30 + 30)/30)][x+j])
+                {
+                    collide=true;
+                    break;
+                }
+            }
+        }
+
+        if (y + max * 30 + 30 >= 900 || collide) {
             for (int i = 0; i < 4; i++) {
                 for (int j = 0; j < 4; j++) {
                     if (*(matrix[k] + i * 4 + j)) {
@@ -175,8 +203,8 @@ int main(void) {
             k = (k + 1) % 7;
             srand(time(0));
             x = rand() % 17;
+            if(collide) collide=false;
         }
-
 
         EndDrawing();
     }
