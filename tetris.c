@@ -140,7 +140,7 @@ while (!WindowShouldClose()) {
             DrawRectangleLines(5,5,100,30,GREEN);
             DrawText("Back",20,6,30,GREEN);
             char str[100];
-            FILE*fp=fopen("leaderboard.txt","r");
+            FILE*fp=fopen("file.txt","r");
             BeginDrawing();
             while(!feof(fp))
             {
@@ -186,7 +186,7 @@ while (!WindowShouldClose()) {
         {
             if(IsKeyPressed(KEY_ENTER))
             {
-                FILE * fp=fopen("leaderboard.txt","a");
+                FILE * fp=fopen("file.txt","a");
                 fprintf(fp,"\n%s ",name);
                 fclose(fp);
                     UnloadTexture(texture[4]);
@@ -222,21 +222,10 @@ while (!WindowShouldClose()) {
        DrawText(TextFormat("%d",score),565, 312, 100, BLACK);
        EndDrawing();
 
-       
-     if(IsKeyPressed(KEY_END))
-        {
-      UnloadTexture(texture[1]);
-      FILE * fp=fopen("leaderboard.txt","a");
-      fprintf(fp,"%d",score);
-      fclose(fp);
-      CloseWindow();
-      free(matrix);
-      return 0;
-    }
-    else if(IsKeyPressed(KEY_HOME))
+    if(IsKeyPressed(KEY_ENTER))
     {
      UnloadTexture(texture[1]);
-       FILE * fp=fopen("leaderboard.txt","a");
+       FILE * fp=fopen("file.txt","a");
        fprintf(fp,"%d",score);
        fclose(fp);
         window=2;
@@ -294,6 +283,14 @@ else if(window==1)
 
     else if(window==3)
     {
+
+        if(IsKeyPressed(KEY_BACKSPACE))
+        {
+            window=4;
+            UnloadTexture(texture[3]);
+            texture[1]=LoadTexture("2.png");
+            y=-120;
+        }
         ClearBackground(BLACK);
         BeginDrawing();
         ClearBackground(BLACK);
@@ -340,8 +337,8 @@ else if(window==1)
         }
     DrawTexture(texture[3],600,0,WHITE);
     ClearBackground(BLACK);
-    DrawText(TextFormat("%d",score), 600+182, 300, 50, BLACK);
-    DrawText(TextFormat("%d",(level-8)/2+1), 778, 720, 50, BLACK);
+    DrawText(TextFormat("%d",score), 600+182, 370, 50, BLACK);
+    DrawText(TextFormat("%d",((level-8)/2)*2), 778, 790, 50, BLACK);
     
     int max;
     int max_j=0,min_j=4,max_i,min_i;
